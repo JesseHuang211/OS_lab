@@ -107,3 +107,58 @@ void interrupt_handler(struct trapframe *tf) {
 stval scause这些csr中的值是只读的，它们仅用于描述当时陷阱发生时的情况。在异常处理完成之后，它们的内容已经失去了继续使用的意义，因为接下来的代码执行不会再依赖这些寄存器。一旦陷阱处理完成，操作系统只需要恢复程序执行的上下文（如通用寄存器和程序计数器 sepc）。stval 和 scause 不属于需要恢复的上下文，它们的值不影响后续的程序执行。
 
 保存 stval 和 scause 是为了确保在处理异常时能够正确获取异常的详细信息。stval提供故障地址或异常相关的值。比如当你遇到访问非法地址的异常时，stval 会告诉你这个非法地址是什么，以便操作系统能够处理这类错误（如缺页异常时用于加载缺失的页面）。scause 提供异常或中断的具体原因。例如，scause 可以告诉操作系统是因为页面错误、系统调用还是断点引发的异常。
+
+### 扩展练习三
+代码如下：
+
+```c
+void exception_handler(struct trapframe *tf) {
+    switch (tf->cause) {
+        case CAUSE_MISALIGNED_FETCH:
+            break;
+        case CAUSE_FAULT_FETCH:
+            break;
+        case CAUSE_ILLEGAL_INSTRUCTION:
+             // 非法指令异常处理
+             /* LAB1 CHALLENGE3   YOUR CODE :  2114011*/
+            /*(1)输出指令异常类型（ Illegal instruction）
+             *(2)输出异常指令地址
+             *(3)更新 tf->epc寄存器
+            */
+            cprintf("Exception type:Illegal instruction\n");
+            cprintf("Illegal instruction caught at 0x%lx\n", tf->epc);
+            tf->epc += 4;
+            break;
+        case CAUSE_BREAKPOINT:
+            //断点异常处理
+            /* LAB1 CHALLLENGE3   YOUR CODE :  2114011*/
+            /*(1)输出指令异常类型（ breakpoint）
+             *(2)输出异常指令地址
+             *(3)更新 tf->epc寄存器
+            */
+            cprintf("Exception type: breakpoint\n");
+            cprintf("ebreak caught at 0x%lx\n", tf->epc);
+            tf->epc += 4;
+            break;
+        case CAUSE_MISALIGNED_LOAD:
+            break;
+        case CAUSE_FAULT_LOAD:
+            break;
+        case CAUSE_MISALIGNED_STORE:
+            break;
+        case CAUSE_FAULT_STORE:
+            break;
+        case CAUSE_USER_ECALL:
+            break;
+        case CAUSE_SUPERVISOR_ECALL:
+            break;
+        case CAUSE_HYPERVISOR_ECALL:
+            break;
+        case CAUSE_MACHINE_ECALL:
+            break;
+        default:
+            print_trapframe(tf);
+            break;
+    }
+}
+```
