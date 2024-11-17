@@ -132,6 +132,7 @@ void interrupt_handler(struct trapframe *tf) {
                 print_ticks();
                 num++;
             }
+            
             break;
         case IRQ_H_TIMER:
             cprintf("Hypervisor software interrupt\n");

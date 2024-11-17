@@ -524,7 +524,7 @@ void interrupt_handler(struct trapframe *tf) {
     802003c2:	8385                	srli	a5,a5,0x1
     802003c4:	08f76263          	bltu	a4,a5,80200448 <interrupt_handler+0x8e>
     802003c8:	00001717          	auipc	a4,0x1
-    802003cc:	cdc70713          	addi	a4,a4,-804 # 802010a4 <etext+0x68a>
+    802003cc:	cd470713          	addi	a4,a4,-812 # 8020109c <etext+0x682>
     802003d0:	078a                	slli	a5,a5,0x2
     802003d2:	97ba                	add	a5,a5,a4
     802003d4:	439c                	lw	a5,0(a5)
@@ -638,14 +638,14 @@ void exception_handler(struct trapframe *tf) {
              *(2)输出异常指令地址
              *(3)更新 tf->epc寄存器
             */
-            cprintf("Exception: Illegal instruction\n");
+            cprintf("Exception type:Illegal instruction\n");
     80200486:	00001517          	auipc	a0,0x1
     8020048a:	ada50513          	addi	a0,a0,-1318 # 80200f60 <etext+0x546>
     8020048e:	bddff0ef          	jal	8020006a <cprintf>
-            cprintf("Faulting instruction address: 0x%lx\n", tf->epc);
+            cprintf("Illegal instruction caught at 0x%lx\n", tf->epc);
     80200492:	10843583          	ld	a1,264(s0)
     80200496:	00001517          	auipc	a0,0x1
-    8020049a:	aea50513          	addi	a0,a0,-1302 # 80200f80 <etext+0x566>
+    8020049a:	af250513          	addi	a0,a0,-1294 # 80200f88 <etext+0x56e>
     8020049e:	bcdff0ef          	jal	8020006a <cprintf>
             tf->epc += 4;
     802004a2:	10843783          	ld	a5,264(s0)
@@ -671,21 +671,21 @@ void exception_handler(struct trapframe *tf) {
     802004c0:	0141                	addi	sp,sp,16
             print_trapframe(tf);
     802004c2:	bd61                	j	8020035a <print_trapframe>
-            cprintf("Exception: Breakpoint\n");
+            cprintf("Exception type: breakpoint\n");
     802004c4:	00001517          	auipc	a0,0x1
-    802004c8:	ae450513          	addi	a0,a0,-1308 # 80200fa8 <etext+0x58e>
+    802004c8:	aec50513          	addi	a0,a0,-1300 # 80200fb0 <etext+0x596>
     802004cc:	b9fff0ef          	jal	8020006a <cprintf>
-            cprintf("Breakpoint at instruction address: 0x%lx\n", tf->epc);
+            cprintf("ebreak caught at 0x%lx\n", tf->epc);
     802004d0:	10843583          	ld	a1,264(s0)
     802004d4:	00001517          	auipc	a0,0x1
-    802004d8:	aec50513          	addi	a0,a0,-1300 # 80200fc0 <etext+0x5a6>
+    802004d8:	afc50513          	addi	a0,a0,-1284 # 80200fd0 <etext+0x5b6>
     802004dc:	b8fff0ef          	jal	8020006a <cprintf>
-            tf->epc += 4;
+            tf->epc += 8;
     802004e0:	10843783          	ld	a5,264(s0)
 }
     802004e4:	60a2                	ld	ra,8(sp)
-            tf->epc += 4;
-    802004e6:	0791                	addi	a5,a5,4
+            tf->epc += 8;
+    802004e6:	07a1                	addi	a5,a5,8
     802004e8:	10f43423          	sd	a5,264(s0)
 }
     802004ec:	6402                	ld	s0,0(sp)
@@ -865,7 +865,7 @@ printnum(void (*putch)(int, void*), void *putdat,
     802005f2:	1a02                	slli	s4,s4,0x20
     802005f4:	020a5a13          	srli	s4,s4,0x20
     802005f8:	00001797          	auipc	a5,0x1
-    802005fc:	9f878793          	addi	a5,a5,-1544 # 80200ff0 <etext+0x5d6>
+    802005fc:	9f078793          	addi	a5,a5,-1552 # 80200fe8 <etext+0x5ce>
     80200600:	97d2                	add	a5,a5,s4
 }
     80200602:	7402                	ld	s0,32(sp)
@@ -929,7 +929,7 @@ vprintfmt(void (*putch)(int, void*), void *putdat, const char *fmt, va_list ap) 
         switch (ch = *(unsigned char *)fmt ++) {
     8020064c:	05500b13          	li	s6,85
     80200650:	00001a97          	auipc	s5,0x1
-    80200654:	a84a8a93          	addi	s5,s5,-1404 # 802010d4 <etext+0x6ba>
+    80200654:	a7ca8a93          	addi	s5,s5,-1412 # 802010cc <etext+0x6b2>
         while ((ch = *(unsigned char *)fmt ++) != '%') {
     80200658:	000c4503          	lbu	a0,0(s8)
     8020065c:	001c0413          	addi	s0,s8,1
@@ -1217,14 +1217,14 @@ vprintfmt(void (*putch)(int, void*), void *putdat, const char *fmt, va_list ap) 
     80200872:	02d64663          	blt	a2,a3,8020089e <vprintfmt+0x27a>
     80200876:	00369713          	slli	a4,a3,0x3
     8020087a:	00001797          	auipc	a5,0x1
-    8020087e:	9b678793          	addi	a5,a5,-1610 # 80201230 <error_string>
+    8020087e:	9ae78793          	addi	a5,a5,-1618 # 80201228 <error_string>
     80200882:	97ba                	add	a5,a5,a4
     80200884:	639c                	ld	a5,0(a5)
     80200886:	cf81                	beqz	a5,8020089e <vprintfmt+0x27a>
                 printfmt(putch, putdat, "%s", p);
     80200888:	86be                	mv	a3,a5
     8020088a:	00000617          	auipc	a2,0x0
-    8020088e:	79660613          	addi	a2,a2,1942 # 80201020 <etext+0x606>
+    8020088e:	78e60613          	addi	a2,a2,1934 # 80201018 <etext+0x5fe>
     80200892:	85a6                	mv	a1,s1
     80200894:	854a                	mv	a0,s2
     80200896:	0e8000ef          	jal	8020097e <printfmt>
@@ -1233,7 +1233,7 @@ vprintfmt(void (*putch)(int, void*), void *putdat, const char *fmt, va_list ap) 
     8020089c:	bb75                	j	80200658 <vprintfmt+0x34>
                 printfmt(putch, putdat, "error %d", err);
     8020089e:	00000617          	auipc	a2,0x0
-    802008a2:	77260613          	addi	a2,a2,1906 # 80201010 <etext+0x5f6>
+    802008a2:	76a60613          	addi	a2,a2,1898 # 80201008 <etext+0x5ee>
     802008a6:	85a6                	mv	a1,s1
     802008a8:	854a                	mv	a0,s2
     802008aa:	0d4000ef          	jal	8020097e <printfmt>
@@ -1287,7 +1287,7 @@ vprintfmt(void (*putch)(int, void*), void *putdat, const char *fmt, va_list ap) 
             for (; (ch = *p ++) != '\0' && (precision < 0 || -- precision >= 0); width --) {
     8020090e:	02800793          	li	a5,40
     80200912:	00000a17          	auipc	s4,0x0
-    80200916:	6f7a0a13          	addi	s4,s4,1783 # 80201009 <etext+0x5ef>
+    80200916:	6efa0a13          	addi	s4,s4,1775 # 80201001 <etext+0x5e7>
     8020091a:	02800513          	li	a0,40
     8020091e:	b5cd                	j	80200800 <vprintfmt+0x1dc>
                 for (width -= strnlen(p, precision); width > 0; width --) {
@@ -1316,15 +1316,15 @@ vprintfmt(void (*putch)(int, void*), void *putdat, const char *fmt, va_list ap) 
                 for (width -= strnlen(p, precision); width > 0; width --) {
     8020094e:	85ea                	mv	a1,s10
     80200950:	00000517          	auipc	a0,0x0
-    80200954:	6b850513          	addi	a0,a0,1720 # 80201008 <etext+0x5ee>
+    80200954:	6b050513          	addi	a0,a0,1712 # 80201000 <etext+0x5e6>
     80200958:	094000ef          	jal	802009ec <strnlen>
     8020095c:	40ac8cbb          	subw	s9,s9,a0
                 p = "(null)";
     80200960:	00000417          	auipc	s0,0x0
-    80200964:	6a840413          	addi	s0,s0,1704 # 80201008 <etext+0x5ee>
+    80200964:	6a040413          	addi	s0,s0,1696 # 80201000 <etext+0x5e6>
             for (; (ch = *p ++) != '\0' && (precision < 0 || -- precision >= 0); width --) {
     80200968:	00000a17          	auipc	s4,0x0
-    8020096c:	6a1a0a13          	addi	s4,s4,1697 # 80201009 <etext+0x5ef>
+    8020096c:	699a0a13          	addi	s4,s4,1689 # 80201001 <etext+0x5e7>
     80200970:	02800793          	li	a5,40
     80200974:	02800513          	li	a0,40
                 for (width -= strnlen(p, precision); width > 0; width --) {

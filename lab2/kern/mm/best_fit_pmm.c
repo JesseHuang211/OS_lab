@@ -75,12 +75,13 @@ best_fit_init_memmap(struct Page *base, size_t n) {
 
         /*LAB2 EXERCISE 2: YOUR CODE*/ 
         // 清空当前页框的标志和属性信息，并将页框的引用计数设置为0
-        p->flags = p->property = 0;
+        p->flags = 0;
+        p->property = 0;
         set_page_ref(p, 0);
     }
     base->property = n;
-    SetPageProperty(base);
-    nr_free += n;
+    SetPageProperty(base); //设置 PG_property 标志位，标记为空闲块的起始页。
+    nr_free += n;  // 更新空闲页的总数
     if (list_empty(&free_list)) {
         list_add(&free_list, &(base->page_link));
     } else {
